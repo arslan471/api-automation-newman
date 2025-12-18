@@ -14,14 +14,16 @@
 					"script": {
 						"exec": [
 							"pm.test(\"Login successful\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
+							"  pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
 							"const res = pm.response.json();\r",
+							"\r",
+							"// save token\r",
 							"pm.environment.set(\"auth_token\", res.token);\r",
 							"\r",
 							"pm.test(\"Token is saved\", function () {\r",
-							"    pm.expect(pm.environment.get(\"auth_token\")).to.exist;\r",
+							"  pm.expect(res.token).to.exist;\r",
 							"});\r",
 							""
 						],
@@ -172,7 +174,7 @@
 							"path": ""
 						}
 					],
-					"body": "{\n  \"status\": \"success\",\n  \"token\": \"abc123-token\"\n}\n"
+					"body": "{\n  \"token\": \"mock_token_123\"\n}\n"
 				}
 			]
 		},
