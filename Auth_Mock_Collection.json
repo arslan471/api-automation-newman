@@ -7,19 +7,21 @@
 	},
 	"item": [
 		{
-			"name": "Get All students",
+			"name": "Login",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"\r",
-							"pm.test(\"Status code is 200\", function () {\r",
+							"pm.test(\"Login successful\", function () {\r",
 							"    pm.response.to.have.status(200);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Response is in JSON format\", function () {\r",
-							"    pm.response.to.be.json;\r",
+							"const res = pm.response.json();\r",
+							"pm.environment.set(\"auth_token\", res.token);\r",
+							"\r",
+							"pm.test(\"Token is saved\", function () {\r",
+							"    pm.expect(pm.environment.get(\"auth_token\")).to.exist;\r",
 							"});\r",
 							""
 						],
@@ -30,6 +32,192 @@
 				}
 			],
 			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"test\",\r\n  \"password\": \"test\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://b685904a-71f5-4201-9264-c7439ce54dd3.mock.pstmn.io/login",
+					"protocol": "https",
+					"host": [
+						"b685904a-71f5-4201-9264-c7439ce54dd3",
+						"mock",
+						"pstmn",
+						"io"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Login Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"test\",\r\n  \"password\": \"test\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://b685904a-71f5-4201-9264-c7439ce54dd3.mock.pstmn.io/login",
+							"protocol": "https",
+							"host": [
+								"b685904a-71f5-4201-9264-c7439ce54dd3",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 18 Dec 2025 12:52:16 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "x-srv-trace",
+							"value": "v=1;t=a780fd4b7e2a29e3"
+						},
+						{
+							"key": "x-srv-span",
+							"value": "v=1;s=85de201eded623c2"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						},
+						{
+							"key": "x-ratelimit-limit",
+							"value": "120"
+						},
+						{
+							"key": "x-ratelimit-remaining",
+							"value": "118"
+						},
+						{
+							"key": "x-ratelimit-reset",
+							"value": "1766062349"
+						},
+						{
+							"key": "etag",
+							"value": "W/\"f3-HBiIyJWUHUWX/oPT7Emp7x0Nxms\""
+						},
+						{
+							"key": "vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "x-envoy-upstream-service-time",
+							"value": "194"
+						},
+						{
+							"key": "cf-cache-status",
+							"value": "DYNAMIC"
+						},
+						{
+							"key": "Set-Cookie",
+							"value": "__cf_bm=.4TXVvE1OX3UfuFG6cXWv6Cr6R_xFnKKeCalSgTv.tE-1766062336-1.0.1.1-JVNF_SXyL7nbtigsNsvaobfdkzSgwyHQkL3El4Vv61EyZk2ZjJd_4NNZGHHGMBza.bxWhiVWGIOWjIFaNWrkw1XIObWpUSrVyHYf5mkfnSA; path=/; expires=Thu, 18-Dec-25 13:22:16 GMT; domain=.pstmn.io; HttpOnly; Secure; SameSite=None"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						},
+						{
+							"key": "CF-RAY",
+							"value": "9afecbe03e652490-KHI"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n  \"status\": \"success\",\n  \"token\": \"abc123-token\"\n}\n"
+				}
+			]
+		},
+		{
+			"name": "Get All students",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Login successful\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"const res = pm.response.json();\r",
+							"\r",
+							"// token save in environment\r",
+							"pm.environment.set(\"auth_token\", res.token);\r",
+							"\r",
+							"// validation\r",
+							"pm.test(\"Token is saved\", function () {\r",
+							"    pm.expect(pm.environment.get(\"auth_token\")).to.exist;\r",
+							"});\r",
+							"pm.test(\"Authorized request\", function () {\r",
+							"    pm.expect(pm.response.code).to.not.eql(401);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}\n",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
